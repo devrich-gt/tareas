@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://fontawesome.com/v4.7.0/assets/font-awesome/css/font-awesome.css"
+		/>
+		<link rel="stylesheet" href="style.css" />
+		<title>APP</title>
+	</head>
+
+	<body>
+		<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="#">App</a>
+			<button
+				class="navbar-toggler"
+				type="button"
+				data-toggle="collapse"
+				data-target="#navbarNav"
+				aria-controls="navbarNav"
+				aria-expanded="false"
+				aria-label="Toggle navigation"
+			>
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item active">
+						<a class="nav-link" href="index.html"
+							>Home <span class="sr-only">(current)</span></a
+						>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="completas.html">Completas</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Acerca de</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<main
+			id="app"
+			role="main"
+			class="container"
+			style="padding-top: 100px;"
+		>
+			<h3>{{titulo}}</h3>
+			<hr />
+
+			<!-- Button trigger modal -->
+			<div class="mb-5">
+				<button
+					type="button"
+					class="btn btn-primary"
+					data-toggle="modal"
+					data-target="#exampleModal"
+				>
+					Agregar Tarea
+					<i class="fa fa-plus" aria-hidden="true"></i>
+				</button>
+			</div>
+
+			<!-- Modal -->
+			<div
+				class="modal fade"
+				id="exampleModal"
+				tabindex="-1"
+				role="dialog"
+				aria-labelledby="exampleModalLabel"
+				aria-hidden="true"
+			>
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">
+								Nueva Tarea
+							</h5>
+							<button
+								type="button"
+								class="close"
+								data-dismiss="modal"
+								aria-label="Close"
+							>
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body m-3">
+							<div class="row form-group">
+								<label for="nombre">Nombre tarea:</label>
+								<input
+									mane="nombre"
+									type="text"
+									class="form-control my-3"
+									v-model="nuevaTarea"
+									v-on:keyup.enter="agregar"
+								/>
+							</div>
+							<div class="row form-group">
+								<label for="descripcion">Descripción:</label>
+								<textarea
+									name="descripcion"
+									type="text"
+									class="form-control my-3"
+									v-model="nuevaDescripcionTarea"
+								></textarea>
+							</div>
+							<div
+								v-if="mensaje != ''"
+								class="alert alert-danger"
+								role="alert"
+							>
+								<strong
+									><i
+										class="fa fa-exclamation-circle"
+										aria-hidden="true"
+									></i
+								></strong>
+								{{mensaje}}
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button
+								type="button"
+								class="btn btn-secondary"
+								data-dismiss="modal"
+							>
+								Cerrar
+							</button>
+							<button
+								v-on:click="agregar"
+								type="button"
+								class="btn btn-primary"
+							>
+								Guardar
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div v-for="(tarea, index) of tareas" class="card mb-5 rounded">
+				<div
+					class="d-flex justify-content-between align-items-center"
+					:class="['card-header', tarea.estado ? 'border-success' : 'border-primary']"
+				>
+					<h5 class="text-capitalize">
+						<strong>{{index + 1}}.</strong> {{tarea.nombre}}
+					</h5>
+					<a
+						class="collapsed d-block"
+						data-toggle="collapse"
+						:href="'#collapse-collapsed'+index"
+						aria-expanded="true"
+						:aria-controls="'collapse-collapsed'+index"
+						:id="'heading-collapsed'+index"
+					>
+						<i class="fa fa-chevron-down pull-right"></i>
+					</a>
+				</div>
+				<div
+					:id="'collapse-collapsed'+index"
+					class="collapse"
+					:aria-labelledby="'heading-collapsed'+index"
+				>
+					<div class="card-body">
+						<p class="card-text">
+							{{tarea.descripcion}}
+						</p>
+					</div>
+				</div>
+				<div class="card-footer">
+					<button
+						v-if="!tarea.estado"
+						class="btn btn-success btn-sm"
+						@click="editarTarea(index)"
+					>
+						Tarea Completada
+						<i class="fa fa-check" aria-hidden="true"></i>
+					</button>
+					<button
+						class="btn btn-danger btn-sm"
+						@click="eliminarTarea(index)"
+					>
+						Eliminar
+						<i class="fa fa-trash-o" aria-hidden="true"></i>
+					</button>
+				</div>
+			</div>
+		</main>
+
+		<!-- development version, includes helpful console warnings -->
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="crud.js"></script>
+	</body>
+</html>
